@@ -1,4 +1,4 @@
-import { ResultCode } from './result.code';
+import { ResultCode } from './result-code';
 
 export const ResultMessages = {
   // General Success
