@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
+import { initializeTransactionalContext, StorageDriver } from 'typeorm-transactional';
 
 async function setupSwagger(app) {
   const config = new DocumentBuilder()
@@ -22,6 +23,8 @@ async function configureApp(app) {
 }
 
 async function bootstrap() {
+  initializeTransactionalContext({ storageDriver: StorageDriver.AUTO });
+
   const app = await NestFactory.create(AppModule);
   await configureApp(app);
 

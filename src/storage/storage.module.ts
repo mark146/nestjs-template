@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { MariadbDataSource } from '@/storage/db/typeorm/datasources/mariadb.datasource';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmDatabaseModule } from '@/storage/db/typeorm/typeorm.module';
 
 @Module({
-  providers: [
-    ConfigService,
-    MariadbDataSource,
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    TypeOrmDatabaseModule,
   ],
 })
 export class StorageModule {}

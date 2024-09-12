@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { UserModule } from '@/application/app-api/v1/users/user.module';
-import { StorageModule } from '@/storage/storage.module';
+import { V1Module } from '@/application/app-api/v1/v1.module';
 
 function createConfigModule() {
   return ConfigModule.forRoot({
@@ -13,8 +12,7 @@ function createConfigModule() {
 @Module({
   imports: [
     createConfigModule(),
-    UserModule,
-    StorageModule,
+    V1Module,
   ],
 })
 export class AppModule {}

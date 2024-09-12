@@ -2,23 +2,28 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { IUserRepository } from '@/domain/v1/user/user.repository.interface';
-import { MariadbDataSource } from '@/storage/db/typeorm/datasources/mariadb.datasource';
 import { User } from '@/domain/v1/user/user.domain';
 import { PaginatedResult } from '@/core/interfaces/paginated-result.interface';
+import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
+import { TransactionHost } from '@nestjs-cls/transactional';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
   private readonly repository: Repository<UserEntity>;
 
   constructor(
-    private readonly dataSource: MariadbDataSource
+    private readonly txHost: TransactionHost<TransactionalAdapterTypeOrm>
   ) {
-    this.repository = this.dataSource.getRepository(UserEntity);
+    this.repository = this.txHost.tx.getRepository(UserEntity);
   }
 
   private mapToUser(entity: UserEntity): User {
     const { id, username, password } = entity;
-    return new User(id, username, password);
+    return new User.Builder()
+      .setUsername(username)
+      .setPassword(password)
+      .setId(id)
+      .build();
   }
 
   async findAll(page: number, limit: number): Promise<PaginatedResult<User>> {
@@ -34,10 +39,16 @@ export class UserRepository implements IUserRepository {
       data: users,
       meta: {
         total,
-        page,
-        limit,
+        page: Number(page),
+        limit: Number(limit),
         totalPages
       }
     };
+  }
+
+  async create(user: User): Promise<void> {
+    const entity = new UserEntity();
+    Object.assign(entity, user);
+    await this.repository.save(entity);
   }
 }
