@@ -1,12 +1,21 @@
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ClsPluginTransactional } from '@nestjs-cls/transactional';
-import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
-import { DataSource } from 'typeorm';
-import { UserEntity } from '@/storage/db/typeorm/mariadb/v1/user/user.entity';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 
-export const TypeOrmClsPluginConfig = new ClsPluginTransactional({
-  imports: [TypeOrmModule.forFeature([UserEntity])],
-  adapter: new TransactionalAdapterTypeOrm({
-    dataSourceToken: DataSource,
-  }),
-});
+@Injectable()
+export class TypeOrmConfigService implements TypeOrmOptionsFactory {
+  constructor(private configService: ConfigService) {}
+
+  createTypeOrmOptions(): TypeOrmModuleOptions {
+    return {
+      type: 'mysql',
+      host: this.configService.get('DB_HOST'),
+      port: this.configService.get<number>('DB_PORT'),
+      username: this.configService.get('DB_USERNAME'),
+      password: this.configService.get('DB_PASSWORD'),
+      database: this.configService.get('DB_DATABASE'),
+      autoLoadEntities: true,
+      synchronize: this.configService.get<boolean>('DB_SYNCHRONIZE', false),
+    };
+  }
+}

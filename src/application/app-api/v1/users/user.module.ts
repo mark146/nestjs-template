@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { UserRepository } from '@/storage/db/typeorm/mariadb/v1/user/user.repository';
-import { IUserRepository } from '@/domain/v1/user/user.repository.interface';
+import { StorageModule } from '@/storage/storage.module';
 
 @Module({
+  imports: [
+    StorageModule,
+  ],
   controllers: [UserController],
-  providers: [
-    UserService,
-    { provide: IUserRepository, useClass: UserRepository },
-  ]
+  providers: [UserService],
+  exports: [UserService],
 })
 export class UserModule {}

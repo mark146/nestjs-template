@@ -2,8 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClsModule } from 'nestjs-cls';
-import { TypeOrmClsPluginConfig } from '@/storage/db/typeorm/config/typeorm-config.service';
-import { TypeOrmConfigService } from '@/storage/db/typeorm/config/typeorm-cls-plugin-config';
+import { TypeOrmClsPluginConfig } from './config/typeorm-cls-plugin-config';
+import { TypeOrmConfigService } from './config/typeorm-config.service';
+import { UserEntity } from './mariadb/v1/user/user.entity';
 
 @Module({
   imports: [
@@ -16,6 +17,9 @@ import { TypeOrmConfigService } from '@/storage/db/typeorm/config/typeorm-cls-pl
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService,
     }),
+    TypeOrmModule.forFeature([
+      UserEntity,
+    ]),
   ],
   providers: [TypeOrmConfigService],
   exports: [TypeOrmModule],

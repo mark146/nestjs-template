@@ -1,12 +1,26 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { User } from '@/domain/v1/user/user.domain';
 
 export class GetUsersResponse {
-  @ApiProperty({ example: 1, description: 'Unique identifier of the user' })
-  id: number;
+  @ApiProperty({
+    description: '사용자 ID',
+    example: '1'
+  })
+  id: string;
 
-  @ApiProperty({ example: 'test', description: 'Username of the user' })
+  @ApiProperty({
+    description: '사용자명',
+    example: 'user123'
+  })
   username: string;
 
-  @ApiProperty({ example: 'test', description: 'Password of the user' })
-  password: string;
+  static fromDomain(user: User): GetUsersResponse {
+    const dto = new GetUsersResponse();
+    if (user.getId()) {
+      dto.id = user.getId().toString();
+    }
+    dto.username = user.getUsername();
+
+    return dto;
+  }
 }
