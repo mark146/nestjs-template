@@ -51,9 +51,8 @@ describe('Users API (e2e)', () => {
       if (response.body.data.length > 0) {
         response.body.data.forEach(user => {
           expect(user).toMatchObject({
-            id: expect.any(Number),
+            id: expect.any(String),
             username: expect.any(String),
-            password: expect.any(String),
           });
         });
       }
