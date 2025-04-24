@@ -34,7 +34,6 @@ export class User {
     this.password = builder.password;
   }
 
-  // 게터 메서드
   getId(): bigint | undefined {
     return this.id;
   }
@@ -45,11 +44,6 @@ export class User {
 
   getPassword(): string {
     return this.password;
-  }
-
-  validatePassword(password: string): boolean {
-    // 실제 구현에서는 암호화된 비밀번호 검증 로직이 포함될 수 있음
-    return this.password === password;
   }
 
   static builder(): UserBuilder {

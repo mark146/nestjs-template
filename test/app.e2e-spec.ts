@@ -58,4 +58,26 @@ describe('Users API (e2e)', () => {
       }
     });
   });
+
+  describe('POST /v1/users', () => {
+    it('should create a new user and return success message', async () => {
+      // Given
+      const newUser = {
+        username: 'testuser',
+        password: 'testpassword',
+      };
+
+      // When
+      const response = await request(app.getHttpServer())
+        .post('/v1/users')
+        .send(newUser)
+        .expect(201);
+
+      // Then
+      expect(response.body).toMatchObject({
+        code: '0000',
+        message: 'Success',
+      });
+    });
+  });
 });

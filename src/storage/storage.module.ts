@@ -1,4 +1,3 @@
-// storage.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmDatabaseModule } from '@/storage/db/typeorm/typeorm.module';
 import { UserRepository } from '@/storage/db/typeorm/mariadb/v1/user/user.repository';
